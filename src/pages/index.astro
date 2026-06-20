@@ -134,13 +134,12 @@ import HeartsBackground from '../components/HeartsBackground.astro';
       return;
     }
     if (evasionCount >= maxEvasions) {
-      return; // Do not move anymore
+      return;
     }
     
     lastEvasionTime = now;
     evasionCount++;
     
-    // Change character expression to pleading
     if (characterWrapper) {
       characterWrapper.setAttribute('data-state', 'pleading');
     }
@@ -148,42 +147,53 @@ import HeartsBackground from '../components/HeartsBackground.astro';
     const btnWidth = noBtn.offsetWidth;
     const btnHeight = noBtn.offsetHeight;
     
-    // Calculate boundaries relative to screen
-    const margin = 40;
-    const minX = margin;
-    const minY = margin;
-    const maxX = window.innerWidth - btnWidth - margin;
-    const maxY = window.innerHeight - btnHeight - margin;
+    const viewportWidth = document.documentElement.clientWidth;
+    const viewportHeight = document.documentElement.clientHeight;
+    const desiredMargin = 40;
+    const availW = viewportWidth - btnWidth;
+    const availH = viewportHeight - btnHeight;
+    const marginX = Math.min(desiredMargin, Math.max(0, availW / 2));
+    const marginY = Math.min(desiredMargin, Math.max(0, availH / 2));
+    const minX = marginX;
+    const minY = marginY;
+    const maxX = availW - marginX;
+    const maxY = availH - marginY;
 
-    // Pick a random location
-    let newX = Math.random() * (maxX - minX) + minX;
-    let newY = Math.random() * (maxY - minY) + minY;
+    function randomPos() {
+      return {
+        x: Math.random() * Math.max(0, maxX - minX) + minX,
+        y: Math.random() * Math.max(0, maxY - minY) + minY
+      };
+    }
 
-    // Check if new location is too close to the yes button
+    let pos = randomPos();
+
     const yesRect = yesBtn.getBoundingClientRect();
     const yesCenterX = yesRect.left + yesRect.width / 2;
     const yesCenterY = yesRect.top + yesRect.height / 2;
-    
-    // If it's too close to Yes button, shift it
-    const distToYes = Math.hypot(newX + btnWidth / 2 - yesCenterX, newY + btnHeight / 2 - yesCenterY);
-    if (distToYes < 150) {
-      newX = (newX + 250) % maxX;
-      newY = (newY + 250) % maxY;
+
+    for (let i = 0; i < 20; i++) {
+      const distToYes = Math.hypot(
+        pos.x + btnWidth / 2 - yesCenterX,
+        pos.y + btnHeight / 2 - yesCenterY
+      );
+      if (distToYes >= 150) break;
+      pos = randomPos();
     }
 
-    // Set absolute position styling
+    pos.x = Math.max(marginX, Math.min(pos.x, maxX));
+    pos.y = Math.max(marginY, Math.min(pos.y, maxY));
+
     noBtn.style.position = 'fixed';
-    noBtn.style.left = `${newX}px`;
-    noBtn.style.top = `${newY}px`;
+    noBtn.style.left = `${pos.x}px`;
+    noBtn.style.top = `${pos.y}px`;
     noBtn.style.zIndex = '999';
 
-    // Increase Yes button scale slightly for each evasion
     const maxScale = 2.5;
     const scale = Math.min(1 + evasionCount * 0.15, maxScale);
     yesBtn.style.transform = `scale(${scale})`;
 
     if (evasionCount >= maxEvasions) {
-      // Character goes extra sad when No becomes clickable
       noBtn.textContent = 'No... 🥺';
       noBtn.classList.remove('bg-white');
       noBtn.classList.add('bg-red-50', 'border-red-300');
@@ -219,6 +229,24 @@ import HeartsBackground from '../components/HeartsBackground.astro';
           characterWrapper.setAttribute('data-state', 'default');
         }
       }
+    }
+  });
+
+  // Touch proximity detection for mobile
+  document.addEventListener('touchmove', (e) => {
+    if (!noBtn || evasionCount >= maxEvasions) return;
+
+    const touch = e.touches[0];
+    if (!touch) return;
+
+    const rect = noBtn.getBoundingClientRect();
+    const btnCenterX = rect.left + rect.width / 2;
+    const btnCenterY = rect.top + rect.height / 2;
+
+    const distance = Math.hypot(touch.clientX - btnCenterX, touch.clientY - btnCenterY);
+
+    if (distance < escapeRadius) {
+      moveNoButton();
     }
   });
 
