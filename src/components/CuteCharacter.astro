@@ -54,13 +54,13 @@
       </g>
       
       <!-- Sad Eyebrows (Outward droop) -->
-      <g class="eyebrows-sad hidden">
+      <g class="eyebrows-sad">
         <path d="M 82 95 L 68 102" stroke="#4a282d" stroke-width="6" stroke-linecap="round" />
         <path d="M 118 95 L 132 102" stroke="#4a282d" stroke-width="6" stroke-linecap="round" />
       </g>
 
       <!-- Sad Eyes -->
-      <g class="eye-sad hidden">
+      <g class="eye-sad">
         <circle cx="75" cy="107" r="7" fill="#4a282d" />
         <circle cx="125" cy="107" r="7" fill="#4a282d" />
         <!-- Tear drops -->
@@ -82,7 +82,7 @@
       <path d="M 90 122 Q 100 142 110 122 Z" fill="#ff7b88" stroke="#4a282d" stroke-width="5" stroke-linecap="round" class="mouth-happy hidden" />
       
       <!-- Sad Mouth (Frown) -->
-      <path d="M 92 130 Q 100 120 108 130" fill="none" stroke="#4a282d" stroke-width="5" stroke-linecap="round" class="mouth-sad hidden" />
+      <path d="M 92 130 Q 100 120 108 130" fill="none" stroke="#4a282d" stroke-width="5" stroke-linecap="round" class="mouth-sad" />
     </g>
 
     <!-- Tiny Paws -->
@@ -130,11 +130,17 @@
   /* Hide/Show classes depending on active state */
   #cute-character-wrapper[data-state="default"] .eye-default { display: block; }
   #cute-character-wrapper[data-state="default"] .mouth-default { display: block; }
+  #cute-character-wrapper[data-state="default"] .eye-sad,
+  #cute-character-wrapper[data-state="default"] .mouth-sad,
+  #cute-character-wrapper[data-state="default"] .eyebrows-sad { display: none; }
 
   #cute-character-wrapper[data-state="pleading"] .eye-default { display: none; }
   #cute-character-wrapper[data-state="pleading"] .mouth-default { display: none; }
   #cute-character-wrapper[data-state="pleading"] .eye-pleading { display: block; }
   #cute-character-wrapper[data-state="pleading"] .mouth-pleading { display: block; }
+  #cute-character-wrapper[data-state="pleading"] .eye-sad,
+  #cute-character-wrapper[data-state="pleading"] .mouth-sad,
+  #cute-character-wrapper[data-state="pleading"] .eyebrows-sad { display: none; }
   #cute-character-wrapper[data-state="pleading"] .blush { fill: #ff8595; }
   #cute-character-wrapper[data-state="pleading"] .paw-left { transform: translateY(-5px); }
   #cute-character-wrapper[data-state="pleading"] .paw-right { transform: translateY(-5px); }
@@ -143,6 +149,9 @@
   #cute-character-wrapper[data-state="happy"] .mouth-default { display: none; }
   #cute-character-wrapper[data-state="happy"] .eye-happy { display: block; }
   #cute-character-wrapper[data-state="happy"] .mouth-happy { display: block; }
+  #cute-character-wrapper[data-state="happy"] .eye-sad,
+  #cute-character-wrapper[data-state="happy"] .mouth-sad,
+  #cute-character-wrapper[data-state="happy"] .eyebrows-sad { display: none; }
   #cute-character-wrapper[data-state="happy"] .blush { fill: #ffaab3; }
   #cute-character-wrapper[data-state="happy"] .paw-left { transform: translateY(-10px) scale(1.1); }
   #cute-character-wrapper[data-state="happy"] .paw-right { transform: translateY(-10px) scale(1.1); }
@@ -158,6 +167,9 @@
   #cute-character-wrapper[data-state="angry"] .blush { fill: #ff4d6d; }
   #cute-character-wrapper[data-state="angry"] .paw-left { transform: translateY(-15px) rotate(15deg); }
   #cute-character-wrapper[data-state="angry"] .paw-right { transform: translateY(-15px) rotate(-15deg); }
+  #cute-character-wrapper[data-state="angry"] .eye-sad,
+  #cute-character-wrapper[data-state="angry"] .mouth-sad,
+  #cute-character-wrapper[data-state="angry"] .eyebrows-sad { display: none; }
 
   /* Sad state styles */
   #cute-character-wrapper[data-state="sad"] {
